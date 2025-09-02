@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Rasm va Video Joylash</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <header class="flex justify-between items-center mb-8">
+            <h1 class="text-3xl font-bold text-blue-600">Admin Panel</h1>
+            <a href="/" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200">
+                Asosiy sahifa
+            </a>
+        </header>
+
+        <!-- Statistikalar -->
+        <section class="mb-8">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Statistika</h2>
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-lg font-medium text-gray-700">Jami media</h3>
+                    <p id="total-media" class="text-3xl font-bold text-blue-600">0</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-lg font-medium text-gray-700">Jami rasmlar</h3>
+                    <p id="total-images" class="text-3xl font-bold text-blue-600">0</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-lg font-medium text-gray-700">Jami videolar</h3>
+                    <p id="total-videos" class="text-3xl font-bold text-blue-600">0</p>
+                </div>
+                <div class="bg-white p-6 rounded-lg shadow-md">
+                    <h3 class="text-lg font-medium text-gray-700">Jami hajm</h3>
+                    <p id="total-size" class="text-3xl font-bold text-blue-600">0 MB</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Media ro'yxati -->
+        <section>
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-semibold text-gray-800">Barcha media</h2>
+                <button onclick="loadMedia()" class="bg-gray-600 text-white px-4 py-2 rounded-md hover:bg-gray-700 transition duration-200">
+                    Yangilash
+                </button>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Media</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Nomi</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Turi</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Hajmi</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Yuklangan sana</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amallar</th>
+                        </tr>
+                    </thead>
+                    <tbody id="media-table-body" class="bg-white divide-y divide-gray-200">
+                        <!-- JavaScript orqali yuklanadi -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+
+    <!-- Xabar qutisi -->
+    <div id="message-box" class="hidden fixed top-4 right-4 p-4 rounded-md shadow-md z-50"></div>
+
+    <!-- Modal oyna -->
+    <div id="media-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg overflow-hidden max-w-4xl w-full mx-4">
+            <div class="flex justify-between items-center p-4 border-b">
+                <h3 class="text-lg font-semibold" id="modal-title">Media Ko'rish</h3>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="p-4 flex justify-center" id="modal-content">
+                <!-- Media shu yerda ko'rsatiladi -->
+            </div>
+            <div class="p-4 border-t flex justify-between">
+                <button onclick="copyModalUrl()" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                    Havolani nusxalash
+                </button>
+                <a id="download-link" href="#" download class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
+                    Yuklab olish
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Statistikani yuklash
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/stats');
+                const stats = await response.json();
+                
+                document.getElementById('total-media').textContent = stats.totalMedia;
+                document.getElementById('total-images').textContent = stats.totalImages;
+                document.getElementById('total-videos').textContent = stats.totalVideos;
+                
+                // Baytlarni MB ga aylantirish
+                const totalSizeMB = (stats.totalSize / (1024 * 1024)).toFixed(2);
+                document.getElementById('total-size').textContent = `${totalSizeMB} MB`;
+            } catch (error) {
+                console.error('Statistika yuklashda xatolik:', error);
+                showMessage('Statistika yuklashda xatolik', 'error');
+            }
+        }
+        
+        // Media ro'yxatini yuklash
+        async function loadMedia() {
+            try {
+                const response = await fetch('/api/media');
+                const media = await response.json();
+                
+                const tableBody = document.getElementById('media-table-body');
+                tableBody.innerHTML = '';
+                
+                if (media.length === 0) {
+                    tableBody.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="px-6 py-4 text-center text-gray-500">
+                                Hech qanday media topilmadi
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                media.forEach(item => {
+                    const row = document.createElement('tr');
+                    
+                    // Baytlarni KB/MB ga aylantirish
+                    let sizeText;
+                    if (item.size < 1024) {
+                        sizeText = `${item.size} B`;
+                    } else if (item.size < 1024 * 1024) {
+                        sizeText = `${(item.size / 1024).toFixed(2)} KB`;
+                    } else {
+                        sizeText = `${(item.size / (1024 * 1024)).toFixed(2)} MB`;
+                    }
+                    
+                    // Sana formatlash
+                    const uploadDate = new Date(item.uploadDate).toLocaleString();
+                    
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            ${item.type === 'image' ? 
+                                `<img src="/media/${item.filename}" alt="${item.originalName}" class="h-12 w-12 object-cover rounded cursor-pointer" onclick="openModalFromAdmin('${item._id}')">` : 
+                                `<div class="h-12 w-12 bg-gray-800 rounded flex items-center justify-center cursor-pointer" onclick="openModalFromAdmin('${item._id}')">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                    </svg>
+                                </div>`
+                            }
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${item.originalName}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${item.type === 'image' ? 'Rasm' : 'Video'}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${sizeText}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="text-sm text-gray-900">${uploadDate}</div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <button onclick="openModalFromAdmin('${item._id}')" class="text-blue-600 hover:text-blue-900 mr-3">Ko'rish</button>
+                            <button onclick="copyMediaUrl('${item.filename}')" class="text-green-600 hover:text-green-900 mr-3">Havola</button>
+                            <button onclick="deleteMedia('${item._id}')" class="text-red-600 hover:text-red-900">O'chirish</button>
+                        </td>
+                    `;
+                    
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.error('Media yuklashda xatolik:', error);
+                showMessage('Media yuklashda xatolik', 'error');
+            }
+        }
+        
+        // Admin panelidan modal ochish
+        async function openModalFromAdmin(id) {
+            try {
+                const response = await fetch('/api/media');
+                const media = await response.json();
+                const item = media.find(m => m._id === id);
+                
+                if (!item) {
+                    showMessage('Media topilmadi', 'error');
+                    return;
+                }
+                
+                const url = `/media/${item.filename}`;
+                const modal = document.getElementById('media-modal');
+                const modalContent = document.getElementById('modal-content');
+                const modalTitle = document.getElementById('modal-title');
+                const downloadLink = document.getElementById('download-link');
+                
+                modalTitle.textContent = item.originalName;
+                downloadLink.href = url;
+                downloadLink.download = item.originalName;
+                
+                modalContent.innerHTML = '';
+                
+                if (item.type === 'image') {
+                    modalContent.innerHTML = `<img src="${url}" alt="${item.originalName}" class="max-h-96">`;
+                } else {
+                    modalContent.innerHTML = `
+                        <video controls class="max-h-96">
+                            <source src="${url}" type="${item.mimetype}">
+                            Sizning brauzeringiz video elementini qo'llab-quvvatlamaydi.
+                        </video>
+                    `;
+                }
+                
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+                
+                // Modal URL ni saqlash
+                modal.dataset.url = url;
+            } catch (error) {
+                console.error('Modal ochishda xatolik:', error);
+                showMessage('Modal ochishda xatolik', 'error');
+            }
+        }
+        
+        // Media URL ini nusxalash
+        function copyMediaUrl(filename) {
+            const url = `${window.location.origin}/media/${filename}`;
+            navigator.clipboard.writeText(url)
+                .then(() => showMessage('Havola nusxalandi!', 'success'))
+                .catch(err => showMessage('Nusxalashda xatolik: ' + err, 'error'));
+        }
+        
+        // Mediani o'chirish
+        async function deleteMedia(id) {
+            if (!confirm('Haqiqatan ham bu mediani o\'chirmoqchimisiz?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/media/${id}`, {
+                    method: 'DELETE'
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage('Media muvaffaqiyatli o\'chirildi', 'success');
+                    loadMedia();
+                    loadStats();
+                } else {
+                    showMessage(result.error || 'O\'chirishda xatolik', 'error');
+                }
+            } catch (error) {
+                console.error('O\'chirishda xatolik:', error);
+                showMessage('O\'chirishda xatolik', 'error');
+            }
+        }
+        
+        // Modal oynani yopish
+        function closeModal() {
+            const modal = document.getElementById('media-modal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Modal oynadagi URL ni nusxalash
+        function copyModalUrl() {
+            const modal = document.getElementById('media-modal');
+            navigator.clipboard.writeText(modal.dataset.url)
+                .then(() => showMessage('Havola nusxalandi!', 'success'))
+                .catch(err => showMessage('Nusxalashda xatolik: ' + err, 'error'));
+        }
+        
+        // Xabarlarni ko'rsatish
+        function showMessage(message, type) {
+            const messageBox = document.getElementById('message-box');
+            messageBox.textContent = message;
+            messageBox.classList.remove('hidden', 'bg-red-100', 'border-red-400', 'text-red-700', 'bg-green-100', 'border-green-400', 'text-green-700');
+            
+            if (type === 'error') {
+                messageBox.classList.add('bg-red-100', 'border-red-400', 'text-red-700');
+            } else {
+                messageBox.classList.add('bg-green-100', 'border-green-400', 'text-green-700');
+            }
+            
+            setTimeout(() => {
+                messageBox.classList.add('hidden');
+            }, 3000);
+        }
+        
+        // ESC tugmasi bilan modalni yopish
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+        
+        // Modal tashqarisiga bosganda yopish
+        document.getElementById('media-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+        
+        // Dastlabki yuklash
+        document.addEventListener('DOMContentLoaded', () => {
+            loadStats();
+            loadMedia();
+        });
+    </script>
+</body>
+</html>

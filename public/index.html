@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rasm va Video Joylash</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <header class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-blue-600 mb-2">Rasm va Video Joylash</h1>
+            <p class="text-gray-600">Rasm yoki videongizni yuklang va ulashish uchun havola oling</p>
+        </header>
+
+        <main class="max-w-2xl mx-auto bg-white rounded-lg shadow-md p-6">
+            <!-- Yuklash formasi -->
+            <div id="upload-section" class="mb-8">
+                <form id="upload-form" class="space-y-4">
+                    <div class="flex items-center justify-center w-full">
+                        <label for="media-file" class="flex flex-col items-center justify-center w-full h-32 border-2 border-dashed rounded-lg cursor-pointer border-gray-300 hover:border-blue-500">
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                                <svg class="w-8 h-8 mb-4 text-gray-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 16">
+                                    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 13h3a3 3 0 0 0 0-6h-.025A5.56 5.56 0 0 0 16 6.5 5.5 5.5 0 0 0 5.207 5.021C5.137 5.017 5.071 5 5 5a4 4 0 0 0 0 8h2.167M10 15V6m0 0L8 8m2-2 2 2"/>
+                                </svg>
+                                <p class="mb-2 text-sm text-gray-500"><span class="font-semibold">Rasm/Video yuklash uchun bosing</span> yoki sudrab keling</p>
+                                <p class="text-xs text-gray-500">PNG, JPG, JPEG, MP4 (MAX. 50MB)</p>
+                            </div>
+                            <input id="media-file" name="media" type="file" class="hidden" accept="image/*,video/*" />
+                        </label>
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-200">Yuklash</button>
+                </form>
+            </div>
+
+            <!-- Yuklash natijasi -->
+            <div id="result-section" class="hidden mb-8">
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                    <strong class="font-bold">Muvaffaqiyatli!</strong>
+                    <span class="block sm:inline" id="success-message">Media muvaffaqiyatli yuklandi.</span>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="block text-gray-700 text-sm font-bold mb-2" for="media-url">
+                        Media havolasi:
+                    </label>
+                    <div class="flex">
+                        <input id="media-url" type="text" readonly class="px-4 py-2 border rounded-l-md flex-grow" value="">
+                        <button onclick="copyUrl()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-r-md">
+                            Nusxa olish
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="mb-4 text-center">
+                    <div id="preview-container"></div>
+                </div>
+                
+                <button onclick="resetForm()" class="w-full bg-gray-600 text-white py-2 px-4 rounded-md hover:bg-gray-700 transition duration-200">
+                    Yangi media yuklash
+                </button>
+            </div>
+
+            <!-- Xabar qutisi -->
+            <div id="message-box" class="hidden fixed top-4 right-4 p-4 rounded-md shadow-md z-50"></div>
+        </main>
+
+        <!-- So'nggi yuklangan media -->
+        <section class="max-w-4xl mx-auto mt-12">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">So'nggi yuklangan media</h2>
+            <div id="recent-media" class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <!-- Bu yerda JavaScript orqali so'nggi media yuklanadi -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Modal oyna -->
+    <div id="media-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg overflow-hidden max-w-4xl w-full mx-4">
+            <div class="flex justify-between items-center p-4 border-b">
+                <h3 class="text-lg font-semibold" id="modal-title">Media Ko'rish</h3>
+                <button onclick="closeModal()" class="text-gray-500 hover:text-gray-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                    </svg>
+                </button>
+            </div>
+            <div class="p-4 flex justify-center" id="modal-content">
+                <!-- Media shu yerda ko'rsatiladi -->
+            </div>
+            <div class="p-4 border-t flex justify-between">
+                <button onclick="copyModalUrl()" class="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                    Havolani nusxalash
+                </button>
+                <a id="download-link" href="#" download class="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-700">
+                    Yuklab olish
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Formni yuborish
+        document.getElementById('upload-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('media-file');
+            const formData = new FormData();
+            formData.append('media', fileInput.files[0]);
+            
+            try {
+                const response = await fetch('/upload', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    // Natijani ko'rsatish
+                    document.getElementById('upload-section').classList.add('hidden');
+                    document.getElementById('result-section').classList.remove('hidden');
+                    document.getElementById('media-url').value = result.url;
+                    
+                    // Media turiga qarab ko'rsatish
+                    const previewContainer = document.getElementById('preview-container');
+                    previewContainer.innerHTML = '';
+                    
+                    if (result.type === 'image') {
+                        previewContainer.innerHTML = `<img src="${result.url}" alt="Yuklangan rasm" class="max-h-64 mx-auto rounded-md shadow-md">`;
+                    } else if (result.type === 'video') {
+                        previewContainer.innerHTML = `
+                            <video controls class="max-h-64 mx-auto rounded-md shadow-md">
+                                <source src="${result.url}" type="video/mp4">
+                                Sizning brauzeringiz video elementini qo'llab-quvvatlamaydi.
+                            </video>
+                        `;
+                    }
+                    
+                    loadRecentMedia();
+                    showMessage('Media muvaffaqiyatli yuklandi!', 'success');
+                } else {
+                    showMessage(result.error || 'Xatolik yuz berdi', 'error');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showMessage('Server bilan aloqa xatosi', 'error');
+            }
+        });
+        
+        // URL ni nusxalash
+        function copyUrl() {
+            const urlInput = document.getElementById('media-url');
+            urlInput.select();
+            document.execCommand('copy');
+            showMessage('Havola nusxalandi!', 'success');
+        }
+        
+        // Formni qayta tiklash
+        function resetForm() {
+            document.getElementById('upload-form').reset();
+            document.getElementById('upload-section').classList.remove('hidden');
+            document.getElementById('result-section').classList.add('hidden');
+        }
+        
+        // Xabarlarni ko'rsatish
+        function showMessage(message, type) {
+            const messageBox = document.getElementById('message-box');
+            messageBox.textContent = message;
+            messageBox.classList.remove('hidden', 'bg-red-100', 'border-red-400', 'text-red-700', 'bg-green-100', 'border-green-400', 'text-green-700');
+            
+            if (type === 'error') {
+                messageBox.classList.add('bg-red-100', 'border-red-400', 'text-red-700');
+            } else {
+                messageBox.classList.add('bg-green-100', 'border-green-400', 'text-green-700');
+            }
+            
+            setTimeout(() => {
+                messageBox.classList.add('hidden');
+            }, 3000);
+        }
+        
+        // So'nggi yuklangan media yuklash
+        async function loadRecentMedia() {
+            try {
+                const response = await fetch('/api/media?limit=8');
+                const media = await response.json();
+                
+                const container = document.getElementById('recent-media');
+                container.innerHTML = '';
+                
+                media.forEach(item => {
+                    const mediaUrl = `/media/${item.filename}`;
+                    const mediaElement = document.createElement('div');
+                    mediaElement.className = 'relative group cursor-pointer';
+                    mediaElement.onclick = () => openModal(item, mediaUrl);
+                    
+                    if (item.type === 'image') {
+                        mediaElement.innerHTML = `
+                            <img src="${mediaUrl}" alt="${item.originalName}" class="w-full h-32 object-cover rounded-md shadow-md">
+                            <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity rounded-md flex items-center justify-center">
+                                <span class="text-white text-sm">Ko'rish</span>
+                            </div>
+                        `;
+                    } else {
+                        mediaElement.innerHTML = `
+                            <div class="w-full h-32 bg-gray-800 rounded-md shadow-md flex items-center justify-center relative">
+                                <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path>
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <div class="absolute inset-0 bg-black bg-opacity-50 opacity-0 group-hover:opacity-100 transition-opacity rounded-md flex items-center justify-center">
+                                    <span class="text-white text-sm">Ko'rish</span>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
+                    container.appendChild(mediaElement);
+                });
+            } catch (error) {
+                console.error('Soʻnggi media yuklashda xatolik:', error);
+            }
+        }
+        
+        // Modal oynani ochish
+        function openModal(media, url) {
+            const modal = document.getElementById('media-modal');
+            const modalContent = document.getElementById('modal-content');
+            const modalTitle = document.getElementById('modal-title');
+            const downloadLink = document.getElementById('download-link');
+            
+            modalTitle.textContent = media.originalName;
+            downloadLink.href = url;
+            downloadLink.download = media.originalName;
+            
+            modalContent.innerHTML = '';
+            
+            if (media.type === 'image') {
+                modalContent.innerHTML = `<img src="${url}" alt="${media.originalName}" class="max-h-96">`;
+            } else {
+                modalContent.innerHTML = `
+                    <video controls class="max-h-96">
+                        <source src="${url}" type="${media.mimetype}">
+                        Sizning brauzeringiz video elementini qo'llab-quvvatlamaydi.
+                    </video>
+                `;
+            }
+            
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden';
+            
+            // Modal URL ni saqlash
+            modal.dataset.url = url;
+        }
+        
+        // Modal oynani yopish
+        function closeModal() {
+            const modal = document.getElementById('media-modal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = 'auto';
+        }
+        
+        // Modal oynadagi URL ni nusxalash
+        function copyModalUrl() {
+            const modal = document.getElementById('media-modal');
+            navigator.clipboard.writeText(modal.dataset.url)
+                .then(() => showMessage('Havola nusxalandi!', 'success'))
+                .catch(err => showMessage('Nusxalashda xatolik: ' + err, 'error'));
+        }
+        
+        // ESC tugmasi bilan modalni yopish
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+        
+        // Modal tashqarisiga bosganda yopish
+        document.getElementById('media-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+        
+        // Dastlabki so'nggi media yuklash
+        document.addEventListener('DOMContentLoaded', loadRecentMedia);
+    </script>
+</body>
+</html>
