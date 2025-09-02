@@ -99,7 +99,7 @@
         // Statistikani yuklash
         async function loadStats() {
             try {
-                const response = await fetch('/api/stats');
+                const response = await fetch('https://uploads-hallaym.onrender.com/api/stats');
                 const stats = await response.json();
                 
                 document.getElementById('total-media').textContent = stats.totalMedia;
@@ -118,7 +118,7 @@
         // Media ro'yxatini yuklash
         async function loadMedia() {
             try {
-                const response = await fetch('/api/media');
+                const response = await fetch('https://uploads-hallaym.onrender.com/api/media');
                 const media = await response.json();
                 
                 const tableBody = document.getElementById('media-table-body');
@@ -193,7 +193,7 @@
         // Admin panelidan modal ochish
         async function openModalFromAdmin(id) {
             try {
-                const response = await fetch('/api/media');
+                const response = await fetch('https://uploads-hallaym.onrender.com/api/media');
                 const media = await response.json();
                 const item = media.find(m => m._id === id);
                 
@@ -251,7 +251,7 @@
             }
             
             try {
-                const response = await fetch(`/api/media/${id}`, {
+                const response = await fetch(`https://uploads-hallaym.onrender.com/api/media/${id}`, {
                     method: 'DELETE'
                 });
                 
