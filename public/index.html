@@ -109,7 +109,7 @@
             formData.append('media', fileInput.files[0]);
             
             try {
-                const response = await fetch('/upload', {
+                const response = await fetch('https://uploads-hallaym.onrender.com/upload', {
                     method: 'POST',
                     body: formData
                 });
@@ -183,7 +183,7 @@
         // So'nggi yuklangan media yuklash
         async function loadRecentMedia() {
             try {
-                const response = await fetch('/api/media?limit=8');
+                const response = await fetch('https://uploads-hallaym.onrender.com/api/media?limit=8');
                 const media = await response.json();
                 
                 const container = document.getElementById('recent-media');
