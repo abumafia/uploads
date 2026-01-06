@@ -93,6 +93,8 @@ app.post('/upload', upload.single('media'), async (req, res) => {
     });
 
     await newMedia.save();
+    // Proxy havola qaytariladi
+    const proxyUrl = `/cdn/${result.public_id}`;
 
     res.json({
       success: true,
@@ -151,6 +153,46 @@ app.get('/api/stats', async (req, res) => {
     });
   } catch (err) {
     res.status(500).json({ error: 'Xatolik' });
+  }
+});
+
+// ... oldingi kodlar (Cloudinary config, upload va h.k.)
+
+// CDN Proxy Route – YANGI QISM
+app.get('/cdn/:publicId', async (req, res) => {
+  try {
+    const { publicId } = req.params;
+    const format = req.query.f || req.query.fl || ''; // ixtiyoriy format
+    const quality = req.query.q || 'auto'; // sifat
+
+    // Cloudinary URL ni qo‘lda yaratamiz (optimallashtirilgan)
+    let cloudinaryUrl = `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/`;
+
+    // Agar video bo‘lsa
+    if (publicId.includes('video/')) {
+      cloudinaryUrl = cloudinaryUrl.replace('/image/upload/', '/video/upload/');
+    }
+
+    cloudinaryUrl += `q_${quality},f_auto/${publicId}`;
+
+    if (format) {
+      cloudinaryUrl += `.${format}`;
+    }
+
+    // Cloudinary'dan faylni olish va proxy qilish
+    const response = await fetch(cloudinaryUrl);
+    if (!response.ok) throw new Error('Cloudinary xatosi');
+
+    // Header'larni o'tkazish (cache, content-type)
+    res.set('Content-Type', response.headers.get('content-type'));
+    res.set('Cache-Control', 'public, max-age=31536000, immutable'); // 1 yil cache
+    res.set('Access-Control-Allow-Origin', '*');
+
+    // Stream orqali yuborish (tezkor va xotirani tejaydi)
+    response.body.pipe(res);
+  } catch (error) {
+    console.error('Proxy xatosi:', error);
+    res.status(404).send('Fayl topilmadi');
   }
 });
 
