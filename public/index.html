@@ -3,132 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UploadSX – Tez, Bepul va Xavfsiz Rasm & Video Yuklash</title>
-    <meta name="description" content="UploadSX – eng tez va xavfsiz rasm va video yuklash platformasi. Cloudinary CDN bilan optimallashtirilgan havolalar. Hech qanday ro'yxatdan o'tish shart emas.">
-    <meta name="keywords" content="rasm yuklash, video yuklash, file upload, image hosting, video hosting, bepul upload, cloud storage">
-    <meta name="author" content="HALLAYM">
+    <title>UploadSX – Tez va Bepul Rasm & Video Yuklash</title>
+    <meta name="description" content="UploadSX – eng tez va xavfsiz rasm va video yuklash platformasi. Cloudinary CDN orqali optimallashtirilgan havolalar.">
+    <meta name="keywords" content="rasm yuklash, video yuklash, file upload, image hosting, bepul upload">
     <meta name="robots" content="index, follow">
-
     <link rel="canonical" href="https://uploadsx.onrender.com/">
 
     <!-- Open Graph -->
-    <meta property="og:title" content="UploadSX – Tez Rasm va Video Yuklash Platformasi">
-    <meta property="og:description" content="Bepul, xavfsiz va tezkor media yuklang va ulashing.">
+    <meta property="og:title" content="UploadSX – Tez Media Yuklash">
+    <meta property="og:description" content="Rasm va videolarni bepul va tez yuklang.">
     <meta property="og:url" content="https://uploadsx.onrender.com/">
     <meta property="og:image" content="https://res.cloudinary.com/yourcloud/image/upload/v1/uploadsx/preview.jpg">
     <meta property="og:type" content="website">
-    <meta property="og:site_name" content="UploadSX">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="UploadSX – Bepul Media Yuklash">
-    <meta name="twitter:description" content="Rasm va videolarni tez yuklang va havola oling.">
-    <meta name="twitter:image" content="https://res.cloudinary.com/yourcloud/image/upload/v1/uploadsx/preview.jpg">
 
-    <!-- Theme & Icons -->
+    <!-- Theme -->
     <meta name="theme-color" content="#0f172a">
     <link rel="icon" href="/favicon.ico">
 
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-      tailwind.config = {
-        darkMode: 'class',
-        theme: {
-          extend: {
-            colors: {
-              primary: '#3b82f6',
-              dark: '#0f172a'
-            }
-          }
-        }
-      }
-    </script>
     <style>
-      body { background: linear-gradient(to bottom, #0f172a, #1e293b); min-height: 100vh; }
-      .drop-zone { transition: all 0.4s ease; }
-      .drop-zone.dragover { @apply border-blue-500 bg-blue-900/20 scale-105; }
+        body { background: linear-gradient(to bottom, #0f172a, #1e293b); min-height: 100vh; }
+        .drop-zone { transition: all 0.4s ease; }
+        .drop-zone.dragover { @apply border-blue-500 bg-blue-900/30 scale-105; }
+        progress { accent-color: #3b82f6; }
     </style>
 </head>
 <body class="text-gray-200">
-    <div class="container mx-auto px-4 py-12 max-w-5xl">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
         <!-- Header -->
-        <header class="text-center mb-16">
-            <h1 class="text-6xl font-extrabold bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent mb-4">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent mb-3">
                 UploadSX
             </h1>
-            <p class="text-xl text-gray-400">Rasm yoki videongizni yuklang va darhol havola oling</p>
-            <p class="text-sm text-gray-500 mt-2">Maksimal 100MB • PNG, JPG, MP4, WEBM</p>
+            <p class="text-lg md:text-xl text-gray-400">Rasm yoki videongizni yuklang va havola oling</p>
+            <p class="text-sm text-gray-500 mt-1">Maks. 100MB • PNG, JPG, MP4, WEBM</p>
         </header>
 
-        <!-- Upload Section -->
-        <main class="bg-slate-800/80 backdrop-blur rounded-3xl shadow-2xl p-10 border border-slate-700">
+        <!-- Upload Card -->
+        <div class="bg-slate-800/90 backdrop-blur-lg rounded-2xl shadow-2xl p-6 md:p-8 border border-slate-700">
+            <!-- Upload Section -->
             <div id="upload-section">
-                <div id="drop-zone" class="drop-zone border-4 border-dashed border-slate-600 rounded-2xl p-16 text-center cursor-pointer hover:border-blue-500 transition">
-                    <svg class="w-20 h-20 mx-auto mb-6 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
+                <div id="drop-zone" class="drop-zone border-4 border-dashed border-slate-600 rounded-xl p-10 md:p-14 text-center cursor-pointer hover:border-blue-500 transition">
+                    <svg class="w-14 h-14 md:w-16 md:h-16 mx-auto mb-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5.5 5.5 0 1116 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/>
                     </svg>
-                    <p class="text-2xl font-bold mb-2">Faylni sudrab keling yoki tanlang</p>
-                    <p class="text-gray-400">Yuklash uchun bosing</p>
+                    <p class="text-lg md:text-xl font-semibold mb-2">Faylni sudrab keling yoki tanlang</p>
+                    <p class="text-sm md:text-base text-gray-400">Yuklash uchun bosing</p>
                     <input id="file-input" type="file" accept="image/*,video/*" class="hidden">
                 </div>
 
-                <div class="mt-8">
-                    <progress id="progress-bar" class="w-full h-4 rounded-full hidden bg-slate-700" value="0" max="100"></progress>
-                    <p id="progress-text" class="text-center mt-3 text-lg hidden">0%</p>
+                <!-- Progress -->
+                <div class="mt-6">
+                    <progress id="progress-bar" class="w-full h-3 rounded-full hidden bg-slate-700" value="0" max="100"></progress>
+                    <p id="progress-text" class="text-center mt-2 text-gray-300 hidden">0%</p>
                 </div>
 
-                <button id="upload-btn" disabled class="mt-8 w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-5 rounded-2xl font-bold text-xl hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition">
-                    Yuklashni boshlash
+                <button id="upload-btn" disabled class="mt-6 w-full bg-gradient-to-r from-blue-600 to-purple-600 text-white py-4 rounded-xl font-bold text-lg hover:from-blue-700 hover:to-purple-700 disabled:opacity-50 disabled:cursor-not-allowed transition">
+                    Yuklash
                 </button>
             </div>
 
             <!-- Result Section -->
-            <div id="result-section" class="hidden">
-                <div class="bg-green-900/50 border border-green-600 text-green-300 p-8 rounded-2xl text-center">
-                    <svg class="w-16 h-16 mx-auto mb-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <div id="result-section" class="hidden space-y-6">
+                <div class="bg-green-900/50 border border-green-600 text-green-300 p-6 rounded-xl text-center">
+                    <svg class="w-12 h-12 mx-auto mb-3 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
                     </svg>
-                    <p class="text-3xl font-bold">Muvaffaqiyatli yuklandi!</p>
+                    <p class="text-xl md:text-2xl font-bold">Muvaffaqiyatli yuklandi!</p>
                 </div>
 
-                <div class="mt-10">
-                    <label class="block text-lg mb-3">Doimiy havola:</label>
-                    <div class="flex gap-2">
-                        <input id="media-url" type="text" readonly class="flex-1 bg-slate-700 px-6 py-4 rounded-l-2xl text-lg">
-                        <button onclick="copyUrl()" class="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-r-2xl font-bold transition">Nusxa olish</button>
+                <div>
+                    <label class="block text-sm md:text-base mb-2 text-gray-300">Doimiy havola:</label>
+                    <div class="flex flex-col sm:flex-row gap-2">
+                        <input id="media-url" type="text" readonly class="flex-1 bg-slate-700 px-4 py-3 rounded-lg text-sm md:text-base">
+                        <button onclick="copyUrl()" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-lg font-semibold transition">Nusxa olish</button>
                     </div>
                 </div>
 
-                <div id="preview-container" class="mt-10 rounded-2xl overflow-hidden shadow-2xl"></div>
+                <div id="preview-container" class="rounded-xl overflow-hidden shadow-xl border border-slate-600"></div>
 
-                <button onclick="resetForm()" class="mt-10 w-full bg-slate-700 hover:bg-slate-600 py-5 rounded-2xl font-bold text-xl transition">
-                    Yangi fayl yuklash
+                <button onclick="resetForm()" class="w-full bg-slate-700 hover:bg-slate-600 py-4 rounded-xl font-bold transition">
+                    Yangi yuklash
                 </button>
             </div>
-        </main>
+        </div>
 
         <!-- Recent Uploads -->
-        <section class="mt-20">
-            <h2 class="text-4xl font-bold text-center mb-10 bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent">
+        <section class="mt-12">
+            <h2 class="text-2xl md:text-3xl font-bold text-center mb-6 bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent">
                 So'nggi yuklamalar
             </h2>
-            <div id="recent-media" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6"></div>
+            <div id="recent-media" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 gap-4"></div>
         </section>
     </div>
 
     <!-- Modal -->
-    <div id="media-modal" class="fixed inset-0 bg-black/90 flex items-center justify-center z-50 hidden">
-        <div class="relative max-w-5xl w-full mx-4">
-            <button onclick="closeModal()" class="absolute top-4 right-4 text-white text-4xl hover:text-gray-300">&times;</button>
-            <div id="modal-content" class="rounded-2xl overflow-hidden"></div>
+    <div id="media-modal" class="fixed inset-0 bg-black/95 flex items-center justify-center z-50 hidden p-4">
+        <div class="relative max-w-4xl w-full">
+            <button onclick="closeModal()" class="absolute top-2 right-2 text-white text-3xl hover:text-gray-400 z-10">&times;</button>
+            <div id="modal-content" class="rounded-2xl overflow-hidden shadow-2xl"></div>
             <div class="mt-4 text-center">
-                <button onclick="copyModalUrl()" class="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-xl text-xl font-bold">Havolani nusxalash</button>
+                <button onclick="copyModalUrl()" class="bg-blue-600 hover:bg-blue-700 px-6 py-3 rounded-xl font-bold">Havolani nusxalash</button>
             </div>
         </div>
     </div>
 
     <!-- Toast -->
-    <div id="toast" class="fixed bottom-8 right-8 bg-green-600 text-white px-8 py-4 rounded-xl shadow-2xl hidden z-50">
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-full shadow-2xl hidden z-50 text-sm font-medium">
         Havola nusxalandi!
     </div>
 
@@ -138,22 +122,14 @@
         const uploadBtn = document.getElementById('upload-btn');
         const progressBar = document.getElementById('progress-bar');
         const progressText = document.getElementById('progress-text');
-
         let selectedFile = null;
 
         // Drag & Drop
-        ['dragover', 'dragenter'].forEach(e => {
-            dropZone.addEventListener(e, () => dropZone.classList.add('dragover'));
-        });
-        ['dragleave', 'dragend', 'drop'].forEach(e => {
-            dropZone.addEventListener(e, () => dropZone.classList.remove('dragover'));
-        });
+        ['dragover', 'dragenter'].forEach(e => dropZone.addEventListener(e, () => dropZone.classList.add('dragover')));
+        ['dragleave', 'dragend', 'drop'].forEach(e => dropZone.addEventListener(e, () => dropZone.classList.remove('dragover')));
         dropZone.addEventListener('drop', e => {
             e.preventDefault();
-            if (e.dataTransfer.files.length) {
-                fileInput.files = e.dataTransfer.files;
-                handleFile(e.dataTransfer.files[0]);
-            }
+            if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
         });
         dropZone.addEventListener('click', () => fileInput.click());
         fileInput.addEventListener('change', () => {
@@ -164,12 +140,12 @@
             selectedFile = file;
             uploadBtn.disabled = false;
             dropZone.innerHTML = `
-                <p class="text-xl font-bold">${file.name}</p>
-                <p class="text-gray-400">${(file.size / 1024 / 1024).toFixed(2)} MB</p>
+                <p class="text-base md:text-lg font-bold truncate">${file.name}</p>
+                <p class="text-sm text-gray-400">${(file.size / 1024 / 1024).toFixed(1)} MB</p>
             `;
         }
 
-        uploadBtn.addEventListener('click', async () => {
+        uploadBtn.addEventListener('click', () => {
             if (!selectedFile) return;
 
             const formData = new FormData();
@@ -178,6 +154,7 @@
             progressBar.classList.remove('hidden');
             progressText.classList.remove('hidden');
             uploadBtn.disabled = true;
+            uploadBtn.textContent = 'Yuklanmoqda...';
 
             const xhr = new XMLHttpRequest();
             xhr.open('POST', '/upload');
@@ -199,21 +176,31 @@
 
                     const preview = document.getElementById('preview-container');
                     if (res.type === 'image') {
-                        preview.innerHTML = `<img src="${res.url}" class="w-full rounded-2xl">`;
+                        preview.innerHTML = `<img src="${res.url}" class="w-full">`;
                     } else {
-                        preview.innerHTML = `<video controls class="w-full rounded-2xl"><source src="${res.url}" type="video/mp4"></video>`;
+                        preview.innerHTML = `<video controls class="w-full"><source src="${res.url}" type="video/mp4"></video>`;
                     }
 
                     loadRecentMedia();
                     showToast();
                 } else {
-                    alert(res.error || 'Xatolik');
+                    alert(res.error || 'Xatolik yuz berdi');
                 }
+                resetUploadState();
             };
 
-            xhr.onerror = () => alert('Server xatosi');
+            xhr.onerror = () => {
+                alert('Server bilan aloqa xatosi');
+                resetUploadState();
+            };
+
             xhr.send(formData);
         });
+
+        function resetUploadState() {
+            uploadBtn.textContent = 'Yuklash';
+            uploadBtn.disabled = true;
+        }
 
         function copyUrl() {
             const url = document.getElementById('media-url');
@@ -230,6 +217,7 @@
             dropZone.innerHTML = originalDropZoneHTML;
             selectedFile = null;
             uploadBtn.disabled = true;
+            uploadBtn.textContent = 'Yuklash';
         }
 
         const originalDropZoneHTML = dropZone.innerHTML;
@@ -241,45 +229,51 @@
         }
 
         async function loadRecentMedia() {
-            const res = await fetch('/api/media');
-            const media = await res.json();
-            const container = document.getElementById('recent-media');
-            container.innerHTML = '';
+            try {
+                const res = await fetch('/api/media');
+                const media = await res.json();
+                const container = document.getElementById('recent-media');
+                container.innerHTML = '';
 
-            media.slice(0, 24).forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'group cursor-pointer relative overflow-hidden rounded-xl shadow-lg';
-                div.onclick = () => openModal(item.secureUrl, item.originalName);
+                media.slice(0, 30).forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'group aspect-square relative overflow-hidden rounded-xl shadow-md cursor-pointer';
+                    div.onclick = () => openModal(item.secureUrl, item.originalName, item.resourceType);
 
-                if (item.resourceType === 'image') {
-                    div.innerHTML = `
-                        <img src="${item.secureUrl + '?q=60&w=300'}" alt="${item.originalName}" class="w-full h-40 object-cover transition group-hover:scale-110">
-                        <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                            <span class="text-white font-bold">Ko'rish</span>
-                        </div>
-                    `;
-                } else {
-                    div.innerHTML = `
-                        <div class="bg-slate-700 h-40 flex items-center justify-center relative">
-                            <svg class="w-16 h-16 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                <path d="M8 5v14l11-7z"/>
-                            </svg>
-                            <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
-                                <span class="text-white font-bold">Ijro etish</span>
+                    if (item.resourceType === 'image') {
+                        div.innerHTML = `
+                            <img src="${item.secureUrl}?w=400&q=60" alt="${item.originalName}" class="w-full h-full object-cover transition group-hover:scale-110">
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                                <span class="text-white text-sm font-medium">Ko'rish</span>
                             </div>
-                        </div>
-                    `;
-                }
-                container.appendChild(div);
-            });
+                        `;
+                    } else {
+                        div.innerHTML = `
+                            <div class="w-full h-full bg-slate-700 flex items-center justify-center">
+                                <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
+                                    <path d="M8 5v14l11-7z"/>
+                                </svg>
+                            </div>
+                            <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
+                                <span class="text-white text-sm font-medium">Ijro etish</span>
+                            </div>
+                        `;
+                    }
+                    container.appendChild(div);
+                });
+            } catch (err) {
+                console.error('Recent media yuklash xatosi');
+            }
         }
 
-        function openModal(url, name) {
+        function openModal(url, name, type) {
             const modal = document.getElementById('media-modal');
             const content = document.getElementById('modal-content');
-            content.innerHTML = url.includes('video') ?
-                `<video controls autoplay class="w-full"><source src="${url}" type="video/mp4"></video>` :
-                `<img src="${url}" alt="${name}" class="w-full">`;
+            if (type === 'image') {
+                content.innerHTML = `<img src="${url}" alt="${name}" class="w-full max-h-screen object-contain">`;
+            } else {
+                content.innerHTML = `<video controls autoplay class="w-full max-h-screen"><source src="${url}" type="video/mp4"></video>`;
+            }
             modal.classList.remove('hidden');
             modal.dataset.url = url;
         }
@@ -293,8 +287,12 @@
             showToast();
         }
 
-        document.addEventListener('keydown', e => {
-            if (e.key === 'Escape') closeModal();
+        // ESC bilan yopish
+        document.addEventListener('keydown', e => e.key === 'Escape' && closeModal());
+
+        // Modal tashqarisiga bosish
+        document.getElementById('media-modal').addEventListener('click', e => {
+            if (e.target === document.getElementById('media-modal')) closeModal();
         });
 
         document.addEventListener('DOMContentLoaded', loadRecentMedia);
