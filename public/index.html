@@ -23,7 +23,6 @@
 
     <!-- Theme -->
     <meta name="theme-color" content="#0f172a">
-    <link rel="icon" href="/favicon.ico">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -174,11 +173,11 @@
                 if (res.success) {
                     document.getElementById('upload-section').classList.add('hidden');
                     document.getElementById('result-section').classList.remove('hidden');
-                    document.getElementById('media-url').value = res.publicId;
+                    document.getElementById('media-url').value = res.url;
 
                     const preview = document.getElementById('preview-container');
                     if (res.type === 'image') {
-                        preview.innerHTML = `<img src="${res.publicId}" class="w-full">`;
+                        preview.innerHTML = `<img src="${res.url}" class="w-full">`;
                     } else {
                         preview.innerHTML = `<video controls class="w-full"><source src="${res.url}" type="video/mp4"></video>`;
                     }
@@ -244,7 +243,7 @@
 
                     if (item.resourceType === 'image') {
                         div.innerHTML = `
-                            <img src="${item.publicId}?w=400&q=60" alt="${item.originalName}" class="w-full h-full object-cover transition group-hover:scale-110">
+                            <img src="/cdn/${item.publicId}?w=400&q=60" alt="${item.originalName}" class="w-full h-full object-cover transition group-hover:scale-110">
                             <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
                                 <span class="text-white text-sm font-medium">Ko'rish</span>
                             </div>
@@ -272,9 +271,9 @@
             const modal = document.getElementById('media-modal');
             const content = document.getElementById('modal-content');
             if (type === 'image') {
-                content.innerHTML = `<img src="${publicId}" alt="${name}" class="w-full max-h-screen object-contain">`;
+                content.innerHTML = `<img src="${url}" alt="${name}" class="w-full max-h-screen object-contain">`;
             } else {
-                content.innerHTML = `<video controls autoplay class="w-full max-h-screen"><source src="${publicId}" type="video/mp4"></video>`;
+                content.innerHTML = `<video controls autoplay class="w-full max-h-screen"><source src="${url}" type="video/mp4"></video>`;
             }
             modal.classList.remove('hidden');
             modal.dataset.url = url;
