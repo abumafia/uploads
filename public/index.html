@@ -4,9 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UploadSX – Tez va Bepul Rasm & Video Yuklash</title>
-    <!-- Favicon -->
-    <link rel="icon" href="https://res.cloudinary.com/dh3heagct/image/upload/v1767672014/uploadsx/file.png" type="image/x-icon">
-    <meta name="description" content="UploadSX – eng tez va xavfsiz rasm va video yuklash platformasi. Cloudinary CDN orqali optimallashtirilgan havolalar.">
+    <meta name="description" content="UploadSX – eng tez va xavfsiz rasm va video yuklash platformasi. O'z domeningiz orqali havolalar.">
     <meta name="keywords" content="rasm yuklash, video yuklash, file upload, image hosting, bepul upload">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://uploadsx.onrender.com/">
@@ -15,14 +13,14 @@
     <meta property="og:title" content="UploadSX – Tez Media Yuklash">
     <meta property="og:description" content="Rasm va videolarni bepul va tez yuklang.">
     <meta property="og:url" content="https://uploadsx.onrender.com/">
-    <meta property="og:image" content="https://res.cloudinary.com/dh3heagct/image/upload/v1767672014/uploadsx/file.png">
+    <meta property="og:image" content="https://uploadsx.onrender.com/cdn/uploadsx/preview"> <!-- proxy orqali -->
     <meta property="og:type" content="website">
 
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image">
 
-    <!-- Theme -->
-    <meta name="theme-color" content="#0f172a">
+    <!-- Favicon (proxy orqali – res.cloudinary.com ko‘rinmasin) -->
+    <link rel="icon" href="/cdn/uploadsx/file" type="image/png">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -34,7 +32,6 @@
 </head>
 <body class="text-gray-200">
     <div class="container mx-auto px-4 py-8 max-w-4xl">
-        <!-- Header -->
         <header class="text-center mb-10">
             <h1 class="text-4xl md:text-5xl font-extrabold bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent mb-3">
                 UploadSX
@@ -43,9 +40,7 @@
             <p class="text-sm text-gray-500 mt-1">Maks. 100MB • PNG, JPG, MP4, WEBM</p>
         </header>
 
-        <!-- Upload Card -->
         <div class="bg-slate-800/90 backdrop-blur-lg rounded-2xl shadow-2xl p-6 md:p-8 border border-slate-700">
-            <!-- Upload Section -->
             <div id="upload-section">
                 <div id="drop-zone" class="drop-zone border-4 border-dashed border-slate-600 rounded-xl p-10 md:p-14 text-center cursor-pointer hover:border-blue-500 transition">
                     <svg class="w-14 h-14 md:w-16 md:h-16 mx-auto mb-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -56,7 +51,6 @@
                     <input id="file-input" type="file" accept="image/*,video/*" class="hidden">
                 </div>
 
-                <!-- Progress -->
                 <div class="mt-6">
                     <progress id="progress-bar" class="w-full h-3 rounded-full hidden bg-slate-700" value="0" max="100"></progress>
                     <p id="progress-text" class="text-center mt-2 text-gray-300 hidden">0%</p>
@@ -67,7 +61,6 @@
                 </button>
             </div>
 
-            <!-- Result Section -->
             <div id="result-section" class="hidden space-y-6">
                 <div class="bg-green-900/50 border border-green-600 text-green-300 p-6 rounded-xl text-center">
                     <svg class="w-12 h-12 mx-auto mb-3 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -92,7 +85,6 @@
             </div>
         </div>
 
-        <!-- Recent Uploads -->
         <section class="mt-12">
             <h2 class="text-2xl md:text-3xl font-bold text-center mb-6 bg-gradient-to-r from-blue-400 to-purple-600 bg-clip-text text-transparent">
                 So'nggi yuklamalar
@@ -101,7 +93,7 @@
         </section>
     </div>
 
-    <!-- Modal -->
+    <!-- Modal va Toast -->
     <div id="media-modal" class="fixed inset-0 bg-black/95 flex items-center justify-center z-50 hidden p-4">
         <div class="relative max-w-4xl w-full">
             <button onclick="closeModal()" class="absolute top-2 right-2 text-white text-3xl hover:text-gray-400 z-10">&times;</button>
@@ -112,7 +104,6 @@
         </div>
     </div>
 
-    <!-- Toast -->
     <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-full shadow-2xl hidden z-50 text-sm font-medium">
         Havola nusxalandi!
     </div>
@@ -128,27 +119,18 @@
         // Drag & Drop
         ['dragover', 'dragenter'].forEach(e => dropZone.addEventListener(e, () => dropZone.classList.add('dragover')));
         ['dragleave', 'dragend', 'drop'].forEach(e => dropZone.addEventListener(e, () => dropZone.classList.remove('dragover')));
-        dropZone.addEventListener('drop', e => {
-            e.preventDefault();
-            if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]);
-        });
+        dropZone.addEventListener('drop', e => { e.preventDefault(); if (e.dataTransfer.files.length) handleFile(e.dataTransfer.files[0]); });
         dropZone.addEventListener('click', () => fileInput.click());
-        fileInput.addEventListener('change', () => {
-            if (fileInput.files.length) handleFile(fileInput.files[0]);
-        });
+        fileInput.addEventListener('change', () => { if (fileInput.files.length) handleFile(fileInput.files[0]); });
 
         function handleFile(file) {
             selectedFile = file;
             uploadBtn.disabled = false;
-            dropZone.innerHTML = `
-                <p class="text-base md:text-lg font-bold truncate">${file.name}</p>
-                <p class="text-sm text-gray-400">${(file.size / 1024 / 1024).toFixed(1)} MB</p>
-            `;
+            dropZone.innerHTML = `<p class="text-base md:text-lg font-bold truncate">${file.name}</p><p class="text-sm text-gray-400">${(file.size / 1024 / 1024).toFixed(1)} MB</p>`;
         }
 
         uploadBtn.addEventListener('click', () => {
             if (!selectedFile) return;
-
             const formData = new FormData();
             formData.append('media', selectedFile);
 
@@ -159,8 +141,7 @@
 
             const xhr = new XMLHttpRequest();
             xhr.open('POST', '/upload');
-
-            xhr.upload.onprogress = (e) => {
+            xhr.upload.onprogress = e => {
                 if (e.lengthComputable) {
                     const percent = (e.loaded / e.total) * 100;
                     progressBar.value = percent;
@@ -173,13 +154,13 @@
                 if (res.success) {
                     document.getElementById('upload-section').classList.add('hidden');
                     document.getElementById('result-section').classList.remove('hidden');
-                    document.getElementById('media-url').value = res.url;
+                    document.getElementById('media-url').value = res.url; // proxy havola: /cdn/uploadsx/...
 
                     const preview = document.getElementById('preview-container');
                     if (res.type === 'image') {
-                        preview.innerHTML = `<img src="${res.url}" class="w-full">`;
+                        preview.innerHTML = `<img src="${res.url}" class="w-full rounded-xl" alt="Yuklangan rasm">`;
                     } else {
-                        preview.innerHTML = `<video controls class="w-full"><source src="${res.url}" type="video/mp4"></video>`;
+                        preview.innerHTML = `<video controls class="w-full rounded-xl"><source src="${res.url}" type="video/mp4">Brauzeringiz video qo‘llab-quvvatlamaydi.</video>`;
                     }
 
                     loadRecentMedia();
@@ -187,26 +168,18 @@
                 } else {
                     alert(res.error || 'Xatolik yuz berdi');
                 }
-                resetUploadState();
+                uploadBtn.textContent = 'Yuklash';
+                uploadBtn.disabled = true;
             };
 
-            xhr.onerror = () => {
-                alert('Server bilan aloqa xatosi');
-                resetUploadState();
-            };
-
+            xhr.onerror = () => { alert('Server xatosi'); uploadBtn.textContent = 'Yuklash'; uploadBtn.disabled = true; };
             xhr.send(formData);
         });
 
-        function resetUploadState() {
-            uploadBtn.textContent = 'Yuklash';
-            uploadBtn.disabled = true;
-        }
-
         function copyUrl() {
-            const url = document.getElementById('media-url');
-            url.select();
-            navigator.clipboard.writeText(url.value);
+            const urlInput = document.getElementById('media-url');
+            urlInput.select();
+            navigator.clipboard.writeText(urlInput.value);
             showToast();
         }
 
@@ -220,7 +193,6 @@
             uploadBtn.disabled = true;
             uploadBtn.textContent = 'Yuklash';
         }
-
         const originalDropZoneHTML = dropZone.innerHTML;
 
         function showToast() {
@@ -237,13 +209,16 @@
                 container.innerHTML = '';
 
                 media.slice(0, 30).forEach(item => {
+                    const proxyUrl = `/cdn/${item.publicId}`;
+                    const thumbUrl = `${proxyUrl}?w=400&q=60`;
+
                     const div = document.createElement('div');
                     div.className = 'group aspect-square relative overflow-hidden rounded-xl shadow-md cursor-pointer';
-                    div.onclick = () => openModal(item.secureUrl, item.originalName, item.resourceType);
+                    div.onclick = () => openModal(proxyUrl, item.originalName, item.resourceType);
 
                     if (item.resourceType === 'image') {
                         div.innerHTML = `
-                            <img src="/cdn/${item.publicId}?w=400&q=60" alt="${item.originalName}" class="w-full h-full object-cover transition group-hover:scale-110">
+                            <img src="${thumbUrl}" alt="${item.originalName}" class="w-full h-full object-cover transition group-hover:scale-110">
                             <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
                                 <span class="text-white text-sm font-medium">Ko'rish</span>
                             </div>
@@ -251,9 +226,7 @@
                     } else {
                         div.innerHTML = `
                             <div class="w-full h-full bg-slate-700 flex items-center justify-center">
-                                <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24">
-                                    <path d="M8 5v14l11-7z"/>
-                                </svg>
+                                <svg class="w-12 h-12 text-white" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                             </div>
                             <div class="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition flex items-center justify-center">
                                 <span class="text-white text-sm font-medium">Ijro etish</span>
@@ -263,7 +236,7 @@
                     container.appendChild(div);
                 });
             } catch (err) {
-                console.error('Recent media yuklash xatosi');
+                console.error('Recent media xatosi:', err);
             }
         }
 
@@ -273,7 +246,7 @@
             if (type === 'image') {
                 content.innerHTML = `<img src="${url}" alt="${name}" class="w-full max-h-screen object-contain">`;
             } else {
-                content.innerHTML = `<video controls autoplay class="w-full max-h-screen"><source src="${url}" type="video/mp4"></video>`;
+                content.innerHTML = `<video controls autoplay class="w-full max-h-screen"><source src="${url}" type="video/mp4">Brauzeringiz video qo‘llab-quvvatlamaydi.</video>`;
             }
             modal.classList.remove('hidden');
             modal.dataset.url = url;
@@ -288,14 +261,8 @@
             showToast();
         }
 
-        // ESC bilan yopish
         document.addEventListener('keydown', e => e.key === 'Escape' && closeModal());
-
-        // Modal tashqarisiga bosish
-        document.getElementById('media-modal').addEventListener('click', e => {
-            if (e.target === document.getElementById('media-modal')) closeModal();
-        });
-
+        document.getElementById('media-modal').addEventListener('click', e => { if (e.target === document.getElementById('media-modal')) closeModal(); });
         document.addEventListener('DOMContentLoaded', loadRecentMedia);
     </script>
 </body>
